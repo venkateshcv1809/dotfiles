@@ -22,3 +22,6 @@ opt.cursorline = true
 -- Behavior
 opt.mouse = 'a'
 opt.clipboard = 'unnamedplus' -- Sync with system clipboard
+
+-- Obsidian
+vim.opt.conceallevel = 2
