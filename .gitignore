@@ -176,3 +176,8 @@ jspm_packages/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# Zsh
+.antidote/
+.zsh_plugins.zsh
+.zcompdump*
