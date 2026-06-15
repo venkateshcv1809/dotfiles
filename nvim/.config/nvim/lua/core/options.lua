@@ -24,4 +24,7 @@ opt.mouse = 'a'
 opt.clipboard = 'unnamedplus' -- Sync with system clipboard
 
 -- Obsidian
-vim.opt.conceallevel = 2
+opt.conceallevel = 2
+
+-- Session
+opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
