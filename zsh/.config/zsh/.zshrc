@@ -44,4 +44,7 @@ setopt INC_APPEND_HISTORY
 
 setopt AUTO_CD
 
+# eza configurations
+export EZA_ICONS_AUTO="always"
+
 eval "$(~/.local/bin/mise activate zsh)"
