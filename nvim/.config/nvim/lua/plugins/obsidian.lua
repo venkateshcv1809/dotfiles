@@ -20,7 +20,7 @@ return {
         workspaces = {
             {
                 name = "personal",
-                path = "~/Documents/Notes",
+                path = vim.g.OBSIDIAN_PATH,
             },
         },
     },
