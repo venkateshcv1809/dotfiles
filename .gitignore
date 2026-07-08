@@ -32,6 +32,9 @@ known_hosts
 .venv
 venv/
 env/
+env.lua
+!env-example.lua
+
 
 # Temporary and cache files
 *.tmp
