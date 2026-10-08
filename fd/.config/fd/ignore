@@ -1,0 +1,12 @@
+# macOS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# General caches & build artifacts
+.git/
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.tmp/
