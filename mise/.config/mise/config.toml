@@ -1,0 +1,20 @@
+[settings]
+self_update.auto = true
+experimental = true
+always_keep_download = false
+always_keep_install = false
+plugin_autoupdate_last_check_duration = "7d"
+verbose = false
+
+# [tools]
+# Global tool versions
+# node = "lts"
+# python = "3.12"
+# go = "latest"
+# rust = "stable"
+# usage = "latest"
+
+# [env]
+# Global environment variables managed by mise
+# NODE_ENV = "development"
+# _.python.venv = { path = ".venv", create = true } # Auto-activates virtualenvs in subprojects
