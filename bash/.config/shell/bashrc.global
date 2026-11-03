@@ -1,9 +1,6 @@
-# Source shared environment and aliases
+# Source shared environment
 if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh" ]; then
     source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh"
-fi
-if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh" ]; then
-    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh"
 fi
 
 # Bash history
@@ -22,6 +19,11 @@ else
     if [ -t 1 ]; then
         echo "mise: binary not found in PATH" >&2
     fi
+fi
+
+# Aliases that check command -v must run after mise is on PATH.
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh"
 fi
 
 # Initialize Sheldon
