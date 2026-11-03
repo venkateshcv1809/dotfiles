@@ -40,5 +40,8 @@ Each top-level directory is a GNU Stow package. Shared pieces:
 | `mise/` | Global mise settings |
 | `*/.config/mise/conf.d/` | Per-package tool versions |
 | `sheldon/` | Plugin lists; other packages drop fragments into `sheldon/{zsh,bash}.d` |
+| `fonts/` | MesloLGS Nerd Font files plus fontconfig (`monospace` → Meslo) |
 
 Required packages: `mise`, `sheldon`, `shell`, `bash`. Everything else is optional (default yes at the prompt, always yes with `--all`).
+
+The `fonts` package is the single place for the terminal typeface: files under `~/.local/share/fonts`, and `fontconfig` preferring **MesloLGS Nerd Font** for `monospace`. Bootstrap only runs `fc-cache`. Apps that ignore fontconfig need their own font setting.

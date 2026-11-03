@@ -56,6 +56,7 @@ PACKAGES=(
   go:ask
   rust:ask
   zig:ask
+  fonts:ask
 )
 
 # Tools this script requires. zsh is installed later if that package is selected.
@@ -80,6 +81,7 @@ DOTFILES=""
 ZSH_APPLIED=0
 BASH_APPLIED=0
 SHELDON_APPLIED=0
+FONTS_APPLIED=0
 STAMP="$(date +%Y%m%d-%H%M%S)"
 
 # ------------------------------------------------------------------------
@@ -680,6 +682,16 @@ lock_sheldon() {
   done
 }
 
+apply_fonts() {
+  if [[ "$FONTS_APPLIED" -ne 1 ]]; then
+    return
+  fi
+  if command -v fc-cache >/dev/null 2>&1; then
+    fc-cache -f "$XDG_DATA_HOME/fonts" >/dev/null 2>&1 || true
+    log "refreshed font cache"
+  fi
+}
+
 maybe_chsh_zsh() {
   local zsh_path
   if ((AUTO_YES)); then
@@ -757,7 +769,9 @@ main() {
     "$XDG_CONFIG_HOME/sheldon/zsh.d" \
     "$XDG_CONFIG_HOME/sheldon/bash.d" \
     "$XDG_CONFIG_HOME/mise/conf.d" \
+    "$XDG_CONFIG_HOME/fontconfig/conf.d" \
     "$XDG_DATA_HOME" \
+    "$XDG_DATA_HOME/fonts" \
     "$XDG_STATE_HOME" \
     "$HOME/.local/bin"
 
@@ -771,6 +785,7 @@ main() {
         zsh) ZSH_APPLIED=1 ;;
         bash) BASH_APPLIED=1 ;;
         sheldon) SHELDON_APPLIED=1 ;;
+        fonts) FONTS_APPLIED=1 ;;
       esac
     fi
   done
@@ -779,6 +794,7 @@ main() {
   wire_shell_rc
   ensure_git_include
   lock_sheldon
+  apply_fonts
   maybe_chsh_zsh
   cleanup_temp
 
