@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Source shared environment and aliases
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh"
+fi
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh"
+fi
+
+# Bash history
+HISTFILE="${XDG_STATE_HOME}/bash/history"
+mkdir -p "$(dirname "$HISTFILE")"
+HISTSIZE=10000
+HISTFILESIZE=10000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+
+# Activate Mise
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate bash)"
+else
+    if [ -t 1 ]; then
+        echo "mise: binary not found in PATH" >&2
+    fi
+fi
+
+# Initialize Sheldon
+if command -v sheldon >/dev/null 2>&1; then
+    eval "$(sheldon \
+        --config-file "${XDG_CONFIG_HOME}/sheldon/bash-plugins.toml" \
+        --data-dir "${XDG_DATA_HOME}/sheldon/bash" \
+        source)"
+else
+    if [ -t 1 ]; then
+        echo "sheldon: binary not found in PATH" >&2
+    fi
+fi
