@@ -1,4 +1,5 @@
 [settings]
+self_update.auto = true
 experimental = true
 
 [tools]
