@@ -1,5 +1,3 @@
-#!/usr/bin/env zsh
-
 # Source shared environment and aliases
 if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh" ]; then
     source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh"
