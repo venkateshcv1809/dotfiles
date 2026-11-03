@@ -16,7 +16,8 @@ With no flags, a terminal asks for the mode. Enter selects managed.
   managed       Keep ~/dotfiles and symlink configuration with Stow.
   standalone    Copy configuration into $HOME. This run's temporary clone is removed.
 
-  --all         No prompts: every package, zsh as login shell. Managed unless --standalone.
+  --all         No prompts: every package. Managed unless --standalone.
+                Does not change the login shell.
   --standalone  Select standalone mode.
   --replace     Move a conflicting file to a sibling .bak-<timestamp>.
   --help        Print this usage and exit.
@@ -37,7 +38,7 @@ PACKAGES=(
   sheldon:required
   shell:required
   bash:required
-  zsh:required
+  zsh:ask
   starship:ask
   git:ask
   lazygit:ask
@@ -57,8 +58,8 @@ PACKAGES=(
   zig:ask
 )
 
-# Tools this script requires.
-PREREQS=(git curl zsh)
+# Tools this script requires. zsh is installed later if that package is selected.
+PREREQS=(git curl)
 
 # Managed mode requires Stow.
 PREREQS_managed=(stow)
@@ -184,9 +185,9 @@ os_id() {
   esac
 }
 
-package_manager() {
+detect_package_manager() {
   local release_os="$1"
-  manager="none"
+  local manager="none"
   if [[ "$release_os" == "macos" ]]; then
     manager="brew"
   elif [[ "$(uname -s)" == "Linux" ]]; then
@@ -200,6 +201,11 @@ package_manager() {
       esac
     fi
   fi
+  printf '%s\n' "$manager"
+}
+
+prepare_package_manager() {
+  local manager="$1"
   case "$manager" in
     brew) ensure_macos_brew ;;
     apt) require_command apt-get ;;
@@ -598,12 +604,32 @@ trust_and_install_mise() {
 
 ensure_rc_snippet() {
   local file="$1" snippet="$2"
+  local begin="# >>> dotfiles >>>"
+  local end="# <<< dotfiles <<<"
+  local tmp
   mkdir -p "$(dirname -- "$file")"
+  if [[ -f "$file" ]] && grep -Fxq "$begin" "$file"; then
+    tmp="$(mktemp)"
+    BEGIN="$begin" END="$end" SNIPPET="$snippet" awk '
+      BEGIN { b = ENVIRON["BEGIN"]; e = ENVIRON["END"]; s = ENVIRON["SNIPPET"] }
+      $0 == b {
+        print b
+        print s
+        print e
+        skip = 1
+        next
+      }
+      skip && $0 == e { skip = 0; next }
+      !skip { print }
+    ' "$file" >"$tmp"
+    mv "$tmp" "$file"
+    return
+  fi
   if [[ -f "$file" ]] && grep -Fqx "$snippet" "$file"; then
     return
   fi
   log "updating $file"
-  printf '\n# >>> dotfiles >>>\n%s\n# <<< dotfiles <<<\n' "$snippet" >>"$file"
+  printf '\n%s\n%s\n%s\n' "$begin" "$snippet" "$end" >>"$file"
 }
 
 wire_shell_rc() {
@@ -656,6 +682,13 @@ lock_sheldon() {
 
 maybe_chsh_zsh() {
   local zsh_path
+  if ((AUTO_YES)); then
+    log "leaving login shell unchanged (${SHELL:-unknown}); run chsh interactively if you want zsh"
+    return
+  fi
+  if [[ "$ZSH_APPLIED" -ne 1 ]]; then
+    return
+  fi
   zsh_path="$(command -v zsh)"
   [[ -n "$zsh_path" ]] || return
   if [[ "${SHELL:-}" == "$zsh_path" ]]; then
@@ -673,12 +706,42 @@ maybe_chsh_zsh() {
 # ------------------------------------------------------------------------
 # Entry
 # ------------------------------------------------------------------------
+ensure_package_system_deps() {
+  local os="$1" manager="$2"
+  local -a extra=()
+  local name
+  for name in "${SELECTED[@]}"; do
+    case "$name" in
+      zsh)
+        if ! command -v zsh >/dev/null 2>&1; then
+          extra+=(zsh)
+        fi
+        ;;
+      nvim)
+        if command -v make >/dev/null 2>&1 && command -v cc >/dev/null 2>&1; then
+          continue
+        fi
+        case "$manager" in
+          apt) extra+=(build-essential) ;;
+          brew) extra+=(make) ;;
+          pacman) extra+=(base-devel) ;;
+          dnf) extra+=(gcc make) ;;
+        esac
+        ;;
+    esac
+  done
+  if ((${#extra[@]})); then
+    install_system_packages "$os" "$manager" "${extra[@]}"
+  fi
+}
+
 main() {
   parse_args "$@"
   choose_mode
   local os pkg manager
   os="$(os_id)"
-  package_manager "$os"
+  manager="$(detect_package_manager "$os")"
+  prepare_package_manager "$manager"
   log "mode: $MODE"
   log "os: $os"
   log "package manager: $manager"
@@ -701,6 +764,7 @@ main() {
   ensure_mise
 
   select_packages
+  ensure_package_system_deps "$os" "$manager"
   for pkg in "${SELECTED[@]}"; do
     if apply_package "$pkg"; then
       case "$pkg" in
