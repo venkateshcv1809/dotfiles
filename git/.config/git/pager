@@ -1,0 +1,6 @@
+#!/bin/sh
+# Prefer delta when mise has installed it; otherwise a usable default pager.
+if command -v delta >/dev/null 2>&1; then
+    exec delta "$@"
+fi
+exec less -FRX "$@"
