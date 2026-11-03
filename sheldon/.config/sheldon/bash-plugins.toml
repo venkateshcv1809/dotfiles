@@ -1,0 +1,6 @@
+shell = "bash"
+
+# Fragments load in filename order.
+[plugins.tool-fragments]
+local = "~/.config/sheldon/bash.d"
+use = ["*.bash"]
