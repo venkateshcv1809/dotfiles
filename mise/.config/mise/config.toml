@@ -1,6 +1,5 @@
 [settings]
 self_update.auto = true
-experimental = true
 
 [tools]
-# Global tool definitions
+# Tool versions live in conf.d fragments, one stow package each.

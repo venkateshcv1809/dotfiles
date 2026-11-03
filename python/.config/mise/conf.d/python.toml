@@ -1,6 +1,4 @@
 [tools]
 
-python = "latest"
-
-[env]
-_.python.venv = { path = ".venv", create = true }
+python = "3.14"
+uv = "0.13.6"
