@@ -46,6 +46,7 @@ env.lua
 *.log
 .DS_Store
 Thumbs.db
+.bootstrap-temp-clone
 
 # Editor and IDE files
 .vscode/settings.json
