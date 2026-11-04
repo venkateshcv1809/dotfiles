@@ -1,3 +1,3 @@
 return {
-    "venkateshcv1809/nvim-practice",
+  "venkateshcv1809/nvim-practice",
 }
