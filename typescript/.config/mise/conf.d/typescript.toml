@@ -1,0 +1,4 @@
+[tools]
+
+node = "lts"
+"npm:typescript" = "5.9.3"

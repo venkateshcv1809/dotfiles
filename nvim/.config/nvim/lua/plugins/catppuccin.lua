@@ -11,7 +11,7 @@ return {
             gitsigns = true,
             mason = true,
             lsp_trouble = true,
-            lualine = true,
+            lualine = { enabled = true },
             telescope = { enabled = true },
         }
     },

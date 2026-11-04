@@ -1,0 +1,5 @@
+[settings]
+self_update.auto = true
+
+[tools]
+# Tool versions live in conf.d fragments, one stow package each.

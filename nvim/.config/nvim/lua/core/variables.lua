@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 local has_env, env = pcall(require, "env")
 if not has_env then

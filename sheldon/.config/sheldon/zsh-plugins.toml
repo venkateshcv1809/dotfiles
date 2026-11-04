@@ -1,0 +1,13 @@
+shell = "zsh"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+
+# Fragments load in filename order.
+[plugins.tool-fragments]
+local = "~/.config/sheldon/zsh.d"
+use = ["*.zsh"]
+
+# Loads last so it can highlight keys bound above.
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"

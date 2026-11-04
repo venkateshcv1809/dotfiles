@@ -1,0 +1,1 @@
+# fzf options are set in fzf.sh so both bash and zsh pick them up.

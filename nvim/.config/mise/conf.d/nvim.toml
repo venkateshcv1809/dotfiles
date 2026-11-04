@@ -1,0 +1,4 @@
+[tools]
+
+neovim = "0.12.6"
+tree-sitter = "0.27.1"

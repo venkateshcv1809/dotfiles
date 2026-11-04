@@ -1,0 +1,46 @@
+# Source shared environment
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/env.sh"
+fi
+
+# Zsh history
+HISTFILE="${XDG_STATE_HOME}/zsh/history"
+mkdir -p "$(dirname "$HISTFILE")"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt AUTO_CD
+setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# Zsh autosuggestions
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#a6adc8,bold"
+
+# Activate Mise
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate zsh)"
+else
+    if [ -t 1 ]; then
+        echo "mise: binary not found in PATH" >&2
+    fi
+fi
+
+# Aliases that check command -v must run after mise is on PATH.
+if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh"
+fi
+
+# Initialize Sheldon
+if command -v sheldon >/dev/null 2>&1; then
+    eval "$(sheldon \
+        --config-file "${XDG_CONFIG_HOME}/sheldon/zsh-plugins.toml" \
+        --data-dir "${XDG_DATA_HOME}/sheldon/zsh" \
+        source)"
+else
+    if [ -t 1 ]; then
+        echo "sheldon: binary not found in PATH" >&2
+    fi
+fi

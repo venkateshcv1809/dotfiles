@@ -1,0 +1,14 @@
+[core]
+    pager = ~/.config/git/pager
+
+[interactive]
+    diffFilter = ~/.config/git/diff-filter
+
+[delta]
+    navigate = true
+    line-numbers = true
+    side-by-side = true
+    syntax-theme = Catppuccin Mocha
+
+[merge]
+    conflictStyle = zdiff3
