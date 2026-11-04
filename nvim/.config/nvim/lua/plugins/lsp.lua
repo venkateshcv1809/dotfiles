@@ -8,24 +8,18 @@ return {
     opts = {
       ensure_installed = {
         "bashls",
-        "clangd",
-        "cssls",
-        "dockerls",
-        "dotls",
-        "eslint",
-        "graphql",
-        "html",
+        "gopls",
         "jsonls",
         "lua_ls",
         "marksman",
         "pyright",
         "rust_analyzer",
-        "sqlls",
         "taplo",
         "ts_ls",
-        "yamlls"
-    },
+        "yamlls",
+        "zls",
+      },
       automatic_enable = true,
     },
-  }
+  },
 }
